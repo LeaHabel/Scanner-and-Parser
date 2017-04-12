@@ -10,6 +10,8 @@
 #include <fstream>
 
 using namespace std;
+class BufferOutOfBoundException {};
+class NotAbleToOpenFileException{};
 
 class Buffer {
 
@@ -21,7 +23,8 @@ private:
 	char buffer1 [BUFFER_SIZE];
 	char buffer2 [BUFFER_SIZE];
 	int location1, location2;
-	int currentBuffer;
+	int currentBuffer, wantedSize, inputSize1, inputSize2;
+
 
 	fstream file;
 
@@ -32,6 +35,7 @@ public:
 
 	//new
 	char getChar();
+	void ungetChar();
 
 };
 

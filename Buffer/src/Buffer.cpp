@@ -12,16 +12,19 @@
 using namespace std;
 
 Buffer::Buffer(){
-	location1 = location2 = 0;
-	file.open("C:\\Users\\Lea\\Documents\\Studium\\4. Semester\\Systemnahes Programmieren\\Scanner-and-Parser-buffer\\Scanner-and-Parser-buffer\\Buffer_Test.txt", ios::in); //durch das "in" wird Datei gelesen, durch out wird in Datei geschrieben
+	location1 = location2 = inputSize2 = 0;
+	file.open("C:\\Users\\Lea\\Documents\\Studium\\4. Semester\\Systemnahes Programmieren"
+			"\\Scanner-and-Parser-buffer\\Scanner-and-Parser-buffer\\Buffer_Test.txt",
+			ios::in); //durch das "in" wird Datei gelesen, durch out wird in Datei geschrieben
+	if (!file.is_open()) throw NotAbleToOpenFileException();
 	file.read(buffer1, BUFFER_SIZE);
-	currentBuffer = 1;
-	//int line, column;
+	inputSize1 = file.gcount();
+	currentBuffer = 1; //Zaehler in welchem Buffer wir uns befinden
 }
 
 Buffer::~Buffer() {
-	// TODO Auto-generated destructor stub
-}
+    file.close();
+ }
 
 void Buffer::read() {
 
@@ -36,35 +39,45 @@ void Buffer::read() {
 
 
 char Buffer::getChar(){
-	//Scanner frägt char von Buffer an. Liefert char-weise.
-	if(location2 >= BUFFER_SIZE && location1 >= BUFFER_SIZE){
+	//Scanner fraegt char von Buffer an. Liefert char-weise.
+	if(location2 >= inputSize2 && location1 >= inputSize1){
 		if(currentBuffer == 2){
 			file.read(buffer1, BUFFER_SIZE);
+			inputSize1 = file.gcount();
+			if (inputSize1 == 0) throw BufferOutOfBoundException(); //wenn nichts mehr eingelesen wird
 			location1 = location2 = 0;
 			currentBuffer = 1;
 		}
-//		if(currentBuffer == 1){
-//			file.read(buffer2, BUFFER_SIZE);
-//			location2 = 0;
-//			currentBuffer = 2;
-//		}
 	}
-	if (location1 >= BUFFER_SIZE){ 	//zweiter Buffer (wird befüllt sobald B1 voll ist)
+	if (location1 >= inputSize1){ 	//zweiter Buffer (wird befüllt sobald B1 voll ist)
 			if (location2 == 0){
 				file.read(buffer2, BUFFER_SIZE);
+				inputSize2 = file.gcount();
+				if (inputSize2 == 0) throw BufferOutOfBoundException();
 			}
 			currentBuffer = 2;
 			return buffer2[location2++];
 		}
-//	if(location2 <= BUFFER_SIZE && location1 >= BUFFER_SIZE){
-//		currentBuffer = 2;
-//		return buffer2[location2++]
-//	}
 
-	//Fall: 1024 mal unget char aufruf
 	return buffer1[location1++]; //holt Wert aus Array an erster Stelle raus und Zeiger zeigt danach eins rechts weiter
-
 }
 
+
+
+//geht char-weise wieder zurueck, location wird verringert
+void Buffer::ungetChar(){
+	if(currentBuffer == 1){
+		location1--;
+		if(location1 == 0){
+			currentBuffer = 2;
+		}
+	}
+	else if(currentBuffer == 2){
+		location2--;
+		if(location2 == 0){
+			currentBuffer = 1;
+		}
+	}
+}
 
 

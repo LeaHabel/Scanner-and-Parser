@@ -21,9 +21,19 @@ int main(int argc, char **argv) {
 //	buffer->read();
 
 	Buffer buffer;
-	for(int i = 0; i < 400; i++){
-	cout << buffer.getChar();
-	}
+	int wantedSize = 400;
+	try {
+		for(int i = 0; i < wantedSize; i++){
+			cout << buffer.getChar();
+		}
+	} catch(BufferOutOfBoundException& exception) { /* hier passiert nichts */ }
+
+	buffer.ungetChar();
+	buffer.ungetChar();
+	buffer.ungetChar();
+	buffer.ungetChar();
+	cout << "\n";
+	cout <<buffer.getChar();
 
 }
 
