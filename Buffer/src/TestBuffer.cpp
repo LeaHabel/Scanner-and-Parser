@@ -12,10 +12,18 @@
 using namespace std;
 
 int main(int argc, char **argv) {
+
 	cout << "Buffer" << endl;
-	Buffer*  buffer;
+//	Buffer*  buffer;
+//
+//	buffer = new Buffer();
+//
+//	buffer->read();
 
-	buffer = new Buffer();
+	Buffer buffer;
+	for(int i = 0; i < 400; i++){
+	cout << buffer.getChar();
+	}
 
-	buffer->read();
 }
+

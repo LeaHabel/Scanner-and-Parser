@@ -21,6 +21,7 @@ private:
 	char buffer1 [BUFFER_SIZE];
 	char buffer2 [BUFFER_SIZE];
 	int location1, location2;
+	int currentBuffer;
 
 	fstream file;
 
